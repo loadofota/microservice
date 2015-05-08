@@ -134,7 +134,7 @@ MonoBehaviour:
     m_HorizontalOverflow: 0
     m_VerticalOverflow: 0
     m_LineSpacing: 1
-  m_Text: Enter ID...
+  m_Text: "\uC544\uC774\uB514 \uC785\uB825"
 --- !u!222 &121016335
 CanvasRenderer:
   m_ObjectHideFlags: 0
@@ -794,7 +794,7 @@ MonoBehaviour:
     m_HorizontalOverflow: 0
     m_VerticalOverflow: 0
     m_LineSpacing: 1
-  m_Text: Shop
+  m_Text: "\uC0C1\uC810 \uAD6C\uC785 \uD14C\uC2A4\uD2B8"
 --- !u!222 &666040393
 CanvasRenderer:
   m_ObjectHideFlags: 0
@@ -1663,7 +1663,7 @@ MonoBehaviour:
     m_HorizontalOverflow: 0
     m_VerticalOverflow: 0
     m_LineSpacing: 1
-  m_Text: Enter PW...
+  m_Text: "\uBE44\uBC00\uBC88\uD638 \uC785\uB825"
 --- !u!222 &1345689763
 CanvasRenderer:
   m_ObjectHideFlags: 0
@@ -1851,7 +1851,7 @@ MonoBehaviour:
     m_HorizontalOverflow: 0
     m_VerticalOverflow: 0
     m_LineSpacing: 1
-  m_Text: Battle
+  m_Text: "\uC804\uD22C \uD14C\uC2A4\uD2B8"
 --- !u!222 &1403566469
 CanvasRenderer:
   m_ObjectHideFlags: 0
@@ -2310,7 +2310,7 @@ MonoBehaviour:
     m_HorizontalOverflow: 0
     m_VerticalOverflow: 0
     m_LineSpacing: 1
-  m_Text: Login
+  m_Text: "\uB85C\uADF8\uC778"
 --- !u!222 &1671874799
 CanvasRenderer:
   m_ObjectHideFlags: 0
