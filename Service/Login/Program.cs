@@ -14,13 +14,13 @@ namespace Login
         {
             using (var bus = RabbitHutch.CreateBus(RabbitUtil.ConnectionString()))
             {
-                bus.Respond<LoginCommand, LoginResult>(request =>
+                bus.RespondAsync<LoginCommand, LoginResult>(async request =>
                 {
                     Console.WriteLine("Request received. - " + request.GetType().ToString());
                     Console.WriteLine(" ID = " + request.id);
                     Console.WriteLine(" PW = " + request.pw);
 
-                    Task.Delay(1000).Wait();
+                    await Task.Delay(1000);
 
                     return new LoginResult { Result = string.Format("Login id={0} pw={1} success.", request.id, request.pw) };
                 });

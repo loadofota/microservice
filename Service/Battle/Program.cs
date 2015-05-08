@@ -17,22 +17,14 @@ namespace Battle
                 var message = new TestMessage { Text = "Hello Rabbit" };
                 bus.Publish(message);
 
-                bus.Respond<TestRequestMessage, TestResponseMessage>(request => {
-
-                    Console.WriteLine("Request received. - " + request.Text);
-
-                    Task.Delay(5000).Wait();
-
-                    return new TestResponseMessage { Text = request.Text + " all done!" };
-                });
-
-                bus.Respond<BattleCommand, BattleResult>(request =>
+                bus.RespondAsync<BattleCommand, BattleResult>(async request =>
                 {
 
                     Console.WriteLine("Request received. - " + request.GetType().ToString());
 
-                    Task.Delay(3000).Wait();
-
+                    await Task.Delay(3000);
+                    
+                    
                     return new BattleResult { Result = "Win" };
                 });
 

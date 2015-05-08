@@ -9,3 +9,5 @@ Service/Shop/obj/
 Service/Shop/bin/
 Service/Login/obj/
 Service/Packet/obj/
+Game/obj/
+*.apk

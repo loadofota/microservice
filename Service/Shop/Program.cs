@@ -17,11 +17,12 @@ namespace Shop
                 var message = new TestMessage { Text = "Hello Rabbit" };
                 bus.Publish(message);
 
-                bus.Respond<BuyCommand, BuyResult>(request =>
+                bus.RespondAsync<BuyCommand, BuyResult>(async request =>
                 {
                     Console.WriteLine("Request received. - " + request.GetType().ToString());
                     Console.WriteLine(" Param " + request.shopId);
 
+                    await Task.Delay(2000);
 
                     return new BuyResult { Result = "Shop item " + request.shopId + " bought." };
                 });

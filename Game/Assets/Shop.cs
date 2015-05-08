@@ -1,22 +1,17 @@
 ﻿using UnityEngine;
 using System.Collections;
 using WebSocketSharp;
-using System.IO;
 using Newtonsoft.Json;
-using Newtonsoft.Json.Bson;
-using UnityEngine.UI;
 using Packet;
+using UnityEngine.UI;
 using System.Collections.Generic;
 
-public class Login : MonoBehaviour
+public class Shop : MonoBehaviour
 {
-    public InputField inputFieldId;
-    public InputField inputFieldPw;
-
     WebSocket ws;
     Queue<System.Action> actionQueue = new Queue<System.Action>();
 
-    public void StartLogin()
+    public void StartBuy()
     {
         if (ws == null)
         {
@@ -24,13 +19,13 @@ public class Login : MonoBehaviour
 
             ws.OnMessage += (sender, e) =>
             {
-                Debug.Log("StartLogin reply: " + e.Data);
+                Debug.Log("StartShop reply: " + e.Data);
 
                 lock (actionQueue)
                 {
                     actionQueue.Enqueue(() =>
                     {
-                        Context.ShowPopup("로그인", "로그인했습니다.\n" + e.Data, "확인", "",
+                        Context.ShowPopup("구매", "구매했습니다.\n" + e.Data, "확인", "",
                             () =>
                             {
                                 Context.ClosePopup();
@@ -46,10 +41,11 @@ public class Login : MonoBehaviour
         }
         else if (ws != null && ws.IsAlive == false)
         {
+            ws.Close();
             ws.Connect();
         }
 
-        var serializedObject = JsonConvert.SerializeObject(new LoginCommand { id = inputFieldId.text, pw = inputFieldPw.text }, Formatting.None, new JsonSerializerSettings { TypeNameHandling = TypeNameHandling.All });
+        var serializedObject = JsonConvert.SerializeObject(new BuyCommand { shopId = 1234 }, Formatting.None, new JsonSerializerSettings { TypeNameHandling = TypeNameHandling.All });
 
         ws.Send(serializedObject);
 
