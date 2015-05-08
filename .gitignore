@@ -1,0 +1,11 @@
+Service/DummyRequest/obj/
+Service/DummyRequest/bin/
+Service/Battle/obj/
+Service/Login/bin/
+Service/Battle/bin/
+Game/Library/
+Service/packages/
+Service/Shop/obj/
+Service/Shop/bin/
+Service/Login/obj/
+Service/Packet/obj/
