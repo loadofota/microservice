@@ -1,3 +1,6 @@
+#!/usr/bin/python
+# -*- coding: utf-8 -*-
+
 import tornado.httpserver
 import tornado.websocket
 import tornado.ioloop
@@ -96,7 +99,7 @@ class TornadoQueueConnection(object):
         
         if client != None:
             
-            print 'on_response ' + props.type + ' ' + body
+            #print 'on_response ' + props.type + ' ' + body
             
             client.write_message(body)
             
@@ -115,7 +118,7 @@ class TornadoQueueConnection(object):
                                          reply_to = self.callback_queue,
                                          correlation_id = corr_id,
                                          ),
-                                   body=cmd_body) #'{"id":"gb", "pw":"pw"}')
+                                   body=cmd_body.encode('utf-8')) #'{"id":"gb", "pw":"pw"}')
                                    
         
 
@@ -132,12 +135,12 @@ class TornadoQueueConnection(object):
 class WSHandler(tornado.websocket.WebSocketHandler):
     def open(self):
         print 'new connection'
-        self.write_message("Welcome (new connection)")
+        #self.write_message("Welcome (new connection)")
       
     def on_message(self, message):
         print 'on_message called'
         
-        print 'callback_queue_declare %s' % message
+        #print u'callback_queue_declare %s' % message.encode('utf-8')
         json_message = json.loads(message)
         rmq.call(self, json_message['$type'].replace(', ', ':'), message)
         
