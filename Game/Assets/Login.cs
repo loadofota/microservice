@@ -1,12 +1,11 @@
 ﻿using UnityEngine;
 using System.Collections;
-using WebSocketSharp;
-using System.IO;
 using Newtonsoft.Json;
-using Newtonsoft.Json.Bson;
-using UnityEngine.UI;
 using Packet;
 using System.Collections.Generic;
+using UnityEngine.UI;
+using BestHTTP.WebSocket;
+using System;
 
 public class Login : MonoBehaviour
 {
@@ -20,38 +19,22 @@ public class Login : MonoBehaviour
     {
         if (ws == null)
         {
-            ws = new WebSocket("ws://gasbank.mmzhanqilai.com:19191/ws");
+            ws = new WebSocket(new Uri("ws://gasbank.mmzhanqilai.com:19191/ws"));
 
-            ws.OnMessage += (sender, e) =>
-            {
-                Debug.Log("StartLogin reply: " + e.Data);
-
-                lock (actionQueue)
-                {
-                    actionQueue.Enqueue(() =>
-                    {
-                        Context.ShowPopup("로그인", "로그인했습니다.\n" + e.Data, "확인", "",
-                            () =>
-                            {
-                                Context.ClosePopup();
-                            },
-                            null);
-
-                        GetComponent<Button>().interactable = true;
-                    });
-                }
-            };
-
-            ws.Connect();
+			ws.OnOpen += OnOpen;
+			ws.OnMessage += OnMessageReceived;
+            
+            ws.Open();
         }
-        else if (ws != null && ws.IsAlive == false)
+        else if (ws != null && ws.IsOpen == false)
         {
-            ws.Connect();
+			ws.Close();
+            ws.Open();
         }
-
-        var serializedObject = JsonConvert.SerializeObject(new LoginCommand { id = inputFieldId.text, pw = inputFieldPw.text }, Formatting.None, new JsonSerializerSettings { TypeNameHandling = TypeNameHandling.All });
-
-        ws.Send(serializedObject);
+		else if (ws != null && ws.IsOpen == true)
+		{
+			OnOpen(ws);
+		}
 
         GetComponent<Button>().interactable = false;
     }
@@ -71,4 +54,31 @@ public class Login : MonoBehaviour
             }
         }
     }
+
+	void OnOpen (WebSocket webSocket)
+	{
+		var serializedObject = JsonConvert.SerializeObject(new LoginCommand { id = inputFieldId.text, pw = inputFieldPw.text }, Formatting.None, new JsonSerializerSettings { TypeNameHandling = TypeNameHandling.All });
+		
+		ws.Send(serializedObject);
+	}
+
+	void OnMessageReceived (WebSocket webSocket, string message)
+	{
+		Debug.Log("StartLogin reply: " + message);
+		
+		lock (actionQueue)
+		{
+			actionQueue.Enqueue(() =>
+			                    {
+				Context.ShowPopup("로그인", "로그인했습니다.\n" + message, "확인", "",
+				                  () =>
+				                  {
+					Context.ClosePopup();
+				},
+				null);
+				
+				GetComponent<Button>().interactable = true;
+			});
+		}
+	}
 }

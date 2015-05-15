@@ -1,10 +1,11 @@
 ﻿using UnityEngine;
 using System.Collections;
-using WebSocketSharp;
 using Newtonsoft.Json;
 using Packet;
-using UnityEngine.UI;
 using System.Collections.Generic;
+using UnityEngine.UI;
+using BestHTTP.WebSocket;
+using System;
 
 public class Shop : MonoBehaviour
 {
@@ -15,39 +16,22 @@ public class Shop : MonoBehaviour
     {
         if (ws == null)
         {
-            ws = new WebSocket("ws://gasbank.mmzhanqilai.com:19191/ws");
+            ws = new WebSocket(new Uri("ws://gasbank.mmzhanqilai.com:19191/ws"));
 
-            ws.OnMessage += (sender, e) =>
-            {
-                Debug.Log("StartShop reply: " + e.Data);
+			ws.OnOpen += OnOpen;
+			ws.OnMessage += OnMessageReceived;
 
-                lock (actionQueue)
-                {
-                    actionQueue.Enqueue(() =>
-                    {
-                        Context.ShowPopup("구매", "구매했습니다.\n" + e.Data, "확인", "",
-                            () =>
-                            {
-                                Context.ClosePopup();
-                            },
-                            null);
-
-                        GetComponent<Button>().interactable = true;
-                    });
-                }
-            };
-
-            ws.Connect();
+            ws.Open();
         }
-        else if (ws != null && ws.IsAlive == false)
+        else if (ws != null && ws.IsOpen == false)
         {
             ws.Close();
-            ws.Connect();
+            ws.Open();
         }
-
-        var serializedObject = JsonConvert.SerializeObject(new BuyCommand { shopId = 1234 }, Formatting.None, new JsonSerializerSettings { TypeNameHandling = TypeNameHandling.All });
-
-        ws.Send(serializedObject);
+		else if (ws != null && ws.IsOpen == true)
+		{
+			OnOpen(ws);
+		}
 
         GetComponent<Button>().interactable = false;
     }
@@ -67,4 +51,31 @@ public class Shop : MonoBehaviour
             }
         }
     }
+
+	void OnOpen (WebSocket webSocket)
+	{
+		var serializedObject = JsonConvert.SerializeObject(new BuyCommand { shopId = 1234 }, Formatting.None, new JsonSerializerSettings { TypeNameHandling = TypeNameHandling.All });
+		
+		ws.Send(serializedObject);
+	}
+
+	void OnMessageReceived (WebSocket webSocket, string message)
+	{
+		Debug.Log("StartShop reply: " + message);
+		
+		lock (actionQueue)
+		{
+			actionQueue.Enqueue(() =>
+			                    {
+				Context.ShowPopup("구매", "구매했습니다.\n" + message, "확인", "",
+				                  () =>
+				                  {
+					Context.ClosePopup();
+				},
+				null);
+				
+				GetComponent<Button>().interactable = true;
+			});
+		}
+	}
 }

@@ -12,3 +12,7 @@ Service/Packet/obj/
 Game/obj/
 *.apk
 Game/Temp/
+Game/Assembly-CSharp-vs.csproj
+Game/Assembly-CSharp.csproj
+Game/Game-csharp.sln
+Game/Game.sln
